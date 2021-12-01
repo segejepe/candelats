@@ -1,0 +1,641 @@
+
+<!DOCTYPE html>
+<html>
+  
+<head>
+    <meta charset="UTF-8">
+    <title>Analyzing LVM</title>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/brython/3.8.9/brython.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/brython/3.8.9/brython_stdlib.min.js"></script>
+    <script type="text/javascript" src="pfmi.js"></script>
+    
+    <link rel="stylesheet" href="menu.css">
+    <style>
+    h1{text-align: center;}
+    </style>
+
+
+
+</head>
+  
+<body onload="brython()" topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0" style="background-color:black" >
+    <img src="logo_white_0.png" alt="Candela Logo in white" title="Candela Logo in white" class="d-inline-block align-top" style="background-color: black;">
+
+
+    <div class="menu" >
+      <nav class="clearfix">
+        <ul class="clearfix">
+          <li><a href="https://candelats.netlify.app/index.html">Main</a></li>
+          <li><a href="https://candelats.netlify.app/picoway.html">Picoway</a></li> <!--""<-여기 부분에 URL 작성하면 됨-->
+          <li><a href="https://candelats.netlify.app/velashape.html">VelashapeIII</a></li>
+          <li><a href="https://candelats.netlify.app/profound.html">Profound</a></li>
+          <li><a href="https://candelats.netlify.app/co2re.html">Co2Re</a></li>
+          <li><a href="https://candelats.netlify.app/elosplus.html">eLosPlus</a></li>
+      </ul>
+      <a id="pull" href="#"></a>
+      
+    </nav>
+    </div>
+    
+
+<br>
+<br>
+<br>
+
+
+
+
+
+
+
+    <h1 style="color:white;">Analyzing Picoway LVM</h1>
+    <br>
+   
+    <!--파일 입력 받기--> 
+    
+    <input type="file" name="inputfile" id="inputfile"  style="color:red;"> 
+    <!--output의 id를 뿌려 주기--> 
+    <br>
+   
+    <!--output의 내용을 뿌려 주기--> 
+    <!--아래는 어떻게 Java로 받은 것을 뿌려 준거지??
+    output이 변수인가?
+    -->
+    <br id="output">  <!--이 Pre tag를 지우면 자바 스크립트 자체가 실행이 안된다. 이것 아이디를 받아서 자바스크립트가 실행이 되는거 같다.  HTML 선언이 먼저넹--> 
+    
+    <!--fault를 나타낼 박스를 만들어 보자-->
+
+    
+  
+    <br>
+    
+    <button id='test-button' style="color:red;" >Analyzing LVM</button>
+    
+    <br>
+    <br>
+    <form name = "form" >
+
+    <table border="1" width="1000" align="center" cellspacing="0" cellpadding="3" 
+    bordercolor="#6600ff" bordercolordark="#ffffff" bordercolorlight="#fddc78">
+
+    <tr>
+    <td align="left" width="400" bgcolor="#AED6F1">
+    <font color="#0000ff"></font>System Information</td>
+    <td width="600" bgcolor="white">
+    <textarea id="systeminfo" rows=22 cols=100></textarea></td>
+    </tr>
+
+    <tr>
+    <td align="left" width="400" bgcolor="#AED6F1">
+    <font color="#0000ff"></font>Shot count</td>
+    <td width="600" bgcolor="white">
+    <textarea id="shotcount" rows=16 cols=100></textarea></td>
+    </tr>
+
+    <tr>
+    <td align="left" width="400" bgcolor="#AED6F1">
+    <font color="#0000ff"></font>Activation info</td>
+    <td width="600" bgcolor="white">
+    <textarea id="activationinfo" rows=10 cols=100></textarea></td>
+    </tr>
+
+
+    <tr>
+    <td align="left" width="400" bgcolor="#AED6F1">
+    <font color="#0000ff"></font>Fault lists</td>
+    <td width="600" bgcolor="white">
+    <textarea id="faultbox" rows=5 cols=30></textarea></td>
+    </tr>
+
+    <tr>
+    <td align="left" width="400" bgcolor="#AED6F1">
+    <font color="#0000ff"></font>System condition from the last calibration</td>
+    <td width="600" bgcolor="white">
+    <textarea id="syscondition" rows=10 cols=100></textarea></td>
+    </tr>
+
+    <tr>
+    <td align="left" width="400" bgcolor="#AED6F1">
+    <font color="#0000ff"></font>Parts may be needed from the Fault lists</td>
+    <td width="600" bgcolor="white">
+    <textarea id="necessarypart" rows=20 cols=100></textarea></td>
+    </tr>
+
+    <tr>
+    <td align="left" width="400" bgcolor="#AED6F1">
+    <font color="#0000ff"></font>Service Engineer Action Requirements</td>
+    <td width="600" bgcolor="white">
+    <textarea id="serviceengineeraction" rows=20 cols=100></textarea></td>
+    </tr>
+
+    <tr>
+    <td align="left" width="400" bgcolor="#fffecc">
+    <font color="#0000ff">*</font> Main Issue :</td>
+    <td widht="600" bgcolor="white">
+    <select name="selectpart" onchange="mainfaultpart(this.form)" >
+    <option selected value=0>-Please choose-
+
+    <option value=1>F3.1 - Shutter
+    <option value=2>F3.2 - 532 Flipper
+    <option value=3>F4.2 - Power Supply Communication 
+    <option value=4>F5.1 - Power Supply Tolerance
+    <option value=5>F5.2 - Power Supply Charge 
+    <option value=6>F5.3 - Discharge Error
+    <option value=7>F6.1 - Calibration 
+    <option value=8>F7.1 - Fluid Low Temperature 
+    <option value=9>F7.2 - Fluid High Temperature 
+    <option value=10>F7.3 - Fluid Flow 
+    <option value=11>F7.4 - Fluid Sensor 
+    <option value=12>F7.5 - Fluid Level 
+    <option value=13>F9.1 - Fluid Warmup 
+    <option value=14>F9.3 - KTP Warmup 
+    <option value=15>F10.2 - Handpiece Not Connected 
+    <option value=16>F10.3 - Spot Size Not Set
+    <option value=17>F12.1 - Low Energy
+    <option value=18>F12.2 - High Energy 
+    <option value=19>F12.4 - Wrong Wavelength Energy 
+    <option value=20>F13.2 - FootSwitch
+    <option value=21>F13.4 - FootSwitch
+    <option value=22>F14.1 - 755nm Simmer Out 
+    <option value=23>F18.1 - Energy Circuit
+    <option value=24>F18.2 - Fluid Circuit
+    <option value=25>F19.1 - Laser Trigger
+    <option value=26>F19.3 - Laser Power 
+    <option value=27>F19.4 - Laser HD Power 
+    <option value=28>F19.5 - HV Dump
+    <option value=29>F21 - Software Update
+    <option value=30>F23 - One Wire Communications
+    <option value=31>F26.1 - Internal Fault
+    <option value=32>F26.2 - Internal Fault
+    <option value=33>F26.3 - Internal Communication Fault
+    <option value=34>F26.4 - Internal Communication Fault
+    <option value=35>F27 - Internal I/O Fault
+    <option value=36>F28.1 - KTP Low Temperature 
+    <option value=37>F28.2 - KTP High Temperature 
+    <option value=38>F28.4 - KTP Sensor 
+    <option value=39>F29.1 - Seed Attenuator Fault
+    <option value=40>F29.2 - Amp Attenuator Fault
+    <option value=41>F30 - Voltage Check Fault
+
+    <option value=42>PM request
+    <option value=43>Low Energy: Not getting expected treatment response on all HPs
+    <option value=44>Alignment
+    <option value=45>Zoom Handpiece
+    <option value=46>1064 Resolve Handpiece
+    <option value=47>532 Resolve Handpiece
+    <option value=48>785 Handpiece Low Energy
+    <option value=49>730 Resolve Handpiece Low Energy
+    <option value=50>High Energy or ASE or Hotspot on 8B
+    <option value=51>1064 Low Energy on 8B
+    <option value=52>532 Low Energy
+    <option value=53>Power Off
+    <option value=54>Broken key switch
+    <option value=55>Need to purchase additional pulses
+    <option value=56>532/730/785 Count down in the middle of treatment
+    </select>
+    </td>
+    </tr>
+
+    <tr>
+    <td align="left" width="400" bgcolor="#fffecc">
+    <font color="#0000ff">*</font> Parts for main fault:</td>
+    <td width="600" bgcolor="white">
+    <textarea name="part" type="textarea" cols = "80" rows="10"></textarea></td>
+    </tr>
+</table>
+</form>
+
+
+
+     
+    <script type="text/javascript" src="inputfile.js"></script>
+
+    <script type="text/python">
+    from browser import document
+    from browser.widgets.dialog import InfoDialog
+    
+    
+    
+    def alert(event):
+        LVM = document.getElementById('output').textContent
+        LVMLength=len(LVM)
+        
+        #LVM에서 장비 System info를 나타내는 부분만 짜르기.
+        StartpointSysteminfo=LVM.find('SYSTEM INFORMATION')
+        EndingpointSysteminfo=LVM.find('LAST INSTALLED VERSIONS')
+        NewStartpointSysteminfo = StartpointSysteminfo + 83 #LVM에서  나오도록 앞을 짜름
+        NewEndingpointSysteminfo = EndingpointSysteminfo -6
+        Systeminfoval = LVM[NewStartpointSysteminfo:NewEndingpointSysteminfo] 
+        #장비 System info 저장하는 함수를 넣는다.
+        document.getElementById('systeminfo').textContent = Systeminfoval
+
+
+        #LVM에서 장비 shot count를 나타내는 부분만 짜르기.
+        StartpointShotcount=LVM.find('PULSE COUNTERS')
+        EndingpointShotcount=LVM.find('CKTCAL FACTORS')
+        NewStartpointShotcount = StartpointShotcount + 79 #LVM에서  나오도록 앞을 짜름
+        NewEndingpointShotcount = EndingpointShotcount -6
+        Shotcountinfoval = LVM[NewStartpointShotcount:NewEndingpointShotcount] 
+        #장비 shot count 저장하는 함수를 넣는다.
+        document.getElementById('shotcount').textContent = Shotcountinfoval
+
+
+        #LVM에서 장비 HP activation를 나타내는 부분만 짜르기.
+        StartpointActivation=LVM.find('Pay Per Pulse')
+        EndingpointActivation=LVM.find('CURRENT PARAMETERS')
+        NewStartpointActivation = StartpointActivation -3#LVM에서  나오도록 앞을 짜름
+        NewEndingpointActivation = EndingpointActivation -6
+        Activationinfoval = LVM[NewStartpointActivation:NewEndingpointActivation] 
+        #장비 Activation 저장하는 함수를 넣는다.
+        document.getElementById('activationinfo').textContent = Activationinfoval
+
+        
+        StartpointFaultcount=LVM.find('FAULT COUNTS')
+        EndingpointFaultcount=LVM.find('FAULT HISTORY')
+        NewstartpointFaultcount = StartpointFaultcount + 77 #LVM에서 Fault list 만 나오도록 앞을 짜름
+        NewEndingpointFaultcount = EndingpointFaultcount -3
+        Faultlog = LVM[NewstartpointFaultcount:NewEndingpointFaultcount] 
+        Faultlogx= Faultlog.replace(" , " , "x")
+        #InfoDialog("Fault list입니다.", Faultlogx)
+        #메모장이 Python에 document.getElementById('output').textContent 함수로 저장이 된다
+        document.getElementById('faultbox').textContent = Faultlogx
+
+        
+
+
+       
+
+        StartpointPulseHistory=LVM.find('PULSE HISTORY')
+        EndingpointPulseHistory=LVM.find('FAULT COUNTS')
+        NewStartpointPulseHistory = StartpointPulseHistory +82 #LVM에서 PULSE HISTORY 만 나오도록 앞을 짜름
+        NewEndingpointPulseHistor = EndingpointPulseHistory -3 #LVM에서 PULSE HISTORY 만 나오도록 뒤를 짜름
+        PulseHistory = LVM[NewStartpointPulseHistory:NewEndingpointPulseHistor] #LVM 에서 PULSE HISTORY 만 넣음
+        replacenter = PulseHistory.replace('\n',',') #Ref ID와 다음줄이 묶이는 현상 때문에 두개를 분리 시키기 위해.
+        splitlinePulseHistory= replacenter.split(',')#리스트를 , 별로 모두 짜름.
+        pulsehistoyresult =  [splitlinePulseHistory[i * 31:(i + 1) * 31] for i in range((len(splitlinePulseHistory) + 31 - 1) // 31 )] 
+        pulseType = '    C'
+        refCnt = '      0'
+        m =  0
+        hvRef = [] #HVRef를 담을 리스트 변수
+        hd1064 = [] #HD1064를 담을 리스트 변수
+        hd532 = [] #HD532를 담을 리스트 변수
+        ase = [] #ASE를 담을 리스트 변수 선언
+
+        
+        for m in range(0,len(pulsehistoyresult)):
+            if pulsehistoyresult[m][4] == pulseType: #for문을 돌려 전체 LVM에서...캘리브레이션만 나오게
+                if pulsehistoyresult[m][29] != refCnt: #켈리브레이션 중에서도 마지막 켈리브레이션만 나오게   
+                    hvRef.append(pulsehistoyresult[m][11]) #LVM에서 캘리브레이션에서의 HvRef만 뽑아 내기.
+                    hd1064.append(pulsehistoyresult[m][13]) #LVM에서 캘리브레이션에서의 HD1064만 뽑아 내기
+                    hd532.append(pulsehistoyresult[m][14]) #LVM에서 캘리브레이션에서의 HD532만 뽑아 내기
+                    ase.append(pulsehistoyresult[m][20])  #LVM에서 캘리브레이션에서의 ASE만 뽑아 내기
+            
+                elif pulsehistoyresult[m][29] == refCnt: #켈리브레이션 중에서도 마지막 켈리브레이션만 나오게 refCnt가 0이 되면 LVM을 그만 받아라.
+                    break
+        
+        hvRef_int = [int(i) for i in hvRef]
+        hd1064_float = [float(i) for i in hd1064]
+        hd532_float = [float(i) for i in hd532]
+        ase_int = [int(i) for i in ase]
+
+        syscondtionMsg = [
+        ["The HVRef value is stable after set at 7J.\n","Even though the Amp value is MAX:90, the 1064 energy on 8B(H) is low, so the HVRef value is constantly increasing.\n"],
+        ["The final HVRef value is set below 1225\n" ,"The final HVRef value is set over 1225\n"] ,
+        ["1064 Energy on 8B(H) is lower than 570mJ\n" , "1064 Energy on 8B(H) is around 570mJ\n"] ,
+        ["532 energy is low\n", "532 energy is good\n"],
+        ["ASE is detected during calibration, please check alignment\n", "No ASE detected during calibration: Good\n"],
+        ["532 Flipper mirror stuck\n", "n/a"]]
+        
+
+        listsyscondtionMsg=[]
+        listpartinfoprint = [] #부품에 대한 마지막 프린트해서 담을 빈 리스트를 생성
+        listengineeraction = []
+        
+
+        count={}
+        for i in hvRef_int:
+            try: count[i] += 1
+            except: count[i]=1
+        
+        hvRef_intlist = list(count.items()) 
+        if hvRef_intlist[1][1] / hvRef_intlist[4][1] < 2:
+            listsyscondtionMsg.append(syscondtionMsg[0][0]) 
+
+        else:
+            listsyscondtionMsg.append(syscondtionMsg[0][1])
+            listengineeraction.append("The beam coalignment or upper rail alignment is incorrect.\n->Please check upper rail alignment.\nCould also be possible to damage the seed or isolator.\n") 
+        
+        def hvRefAletflashlamp(x):
+            return x>1200
+        hvRefAletflashlamplist = list(filter(hvRefAletflashlamp,(hvRef_int))) 
+        if not hvRefAletflashlamplist:
+            listsyscondtionMsg.append(syscondtionMsg[1][0])
+        if hvRefAletflashlamplist:
+            listsyscondtionMsg.append(syscondtionMsg[1][1])
+
+        def hd1064Alet(x):
+            return x>530 
+        hd1064Aletlist = list(filter(hd1064Alet,(hd1064_float)))
+        if not hd1064Aletlist:
+            listsyscondtionMsg.append(syscondtionMsg[2][0])
+            listengineeraction.append("1064 Energy at 8B(H) is low\n->Please check upper rail alignment.\n") 
+        if hd1064Aletlist:
+            listsyscondtionMsg.append(syscondtionMsg[2][1])
+
+        def hd532Alet(x):
+            return x>252
+        hd532Aletlist = list(filter(hd532Alet,(hd532_float)))
+        if not hd532Aletlist:
+            listsyscondtionMsg.append(syscondtionMsg[3][0])
+            listengineeraction.append("532 Energy low\n->Please check KTP alignment\n->Check HD BEAMSPLITTER(8055-00-0322)\n") 
+        if hd532Aletlist:
+            listsyscondtionMsg.append(syscondtionMsg[3][1])
+        
+        def aseAlet(x):
+            return x>1
+        aseAletlist = list(filter(aseAlet,(ase_int )))
+        if not aseAletlist:
+            listsyscondtionMsg.append(syscondtionMsg[4][1]) 
+        if aseAletlist:
+            listsyscondtionMsg.append(syscondtionMsg[4][0])
+            listengineeraction.append("The energy at 8B(H) might be incorrect due to the fact of ASE\n->Please check ASE\n") 
+        #System condition from last calibration에 출력
+
+        
+
+
+
+        
+
+        newfaultlogx = Faultlogx.split("\n")
+        Fault = []
+        FaultCount = []
+        
+        #아래 for문을 바꿔야함, 이것만 지나니 안된다. FaultCount만 주석 처리 하면 되넹
+
+        for datafault in newfaultlogx:
+            pair = datafault.split("x")
+            Fault.append(pair[0].strip())
+            #FaultCount.append(pair[1])
+        
+
+       
+
+        Partinfo = {
+            'ASSY, BEAM BLOCKER' : '7122-00-9832' ,  #0
+            'HVPS': '4001-01-0091', #1
+            'ASSY, LENS/RECEP, AMP FIBER,  PICOWAY' : '7122-00-9792' , #2
+            'ASSY, SEED FIBER LENS, PICOWAY' : '7122-00-9906' , #3
+            'FSE, MOUNTED SEED, PICO' : '7122-57-9833' , #4
+            'Arm PP Mirror, FS, 20 mm dia, 1/8 in thk,  532/650/1064 nm' : '8015-00-1245' , #5
+            'Arm PP Mirror, FS, 1.0 in dia, 1/8 in thk,  532/650/1064 nm' :	'8015-00-1246' , #6
+            'MIRROR, PP, 1064/650/532nm  1 DIA X .25, 45 DEGREE' : '8015-00-1247' , #7
+            'Assy, Laser Head, Alex, Picoway' : '7122-00-9786' , #8
+            'ASSY AMP PUMP FIBER PICOWAY' :	'7122-00-4050' , #9
+            'SEED PUMP FIBER PICOWAY' : '7122-00-4049' ,  #10
+            'Assy,Beam Combiner,Gimbal' : '7123-00-0227' , #11
+            'ASSY CUBE BEAMSPLITTER HIGH LDT 755NM' : '7123-00-0039' , #12
+            'ASSY,COOL CHAMB,12 X 71MM,11 D' : '7122-00-9888' , #13
+            'Faraday Isolator, 8 mm dia.' : '8085-18-0430' , #14
+            'ASSY, SINGLE1064 COLL LENS,  120 MM FL' : '7123-00-0036' , #15
+            'LENS, PL/CX, 25.4mmDIA,  120mmF' : '8050-00-9026' , #16
+            'Arm Assy' : '7123-00-0027' , #17
+            'IO board' : '7123-07-0013' ,  #18
+            'ASSY, MIRROR GIMBAL MOUNT, PIC' : '7123-00-0077' , #19
+            'Assy,Dual Band,Gimbal' : '7123-00-0225' , #20
+            'BEAM COMBINER R1064/532 T650 P' : '8055-00-0316' , #21
+            'PAPER,LASER ALIGN,4''x8''SHEET' : '1630-00-0101' , #22
+            'Foam Mirror support ARM, CO2RE' : 'MP96831' , #23
+            'ZOOM HP Distance Gauge kit' : '7122-00-9862' , #24
+            '1064/532 Operator Goggles' : '8095-00-0488' , #25
+            'Patient Goggles' : '8095-00-0470' , #26
+            'Assy, ND:YAG Seed,  Rotating, P' : '7123-00-0010' , #27
+            'ND:YAG ROD, 8 MM DIA., 4 MM TH' : '8020-00-1007' , #28
+            'ASSY, CR4:YAG SEED, ROTATING,' : '7123-00-0009' , #29
+            'FLASHLMP,REARTIP,700T,4''ARC,8:  x 2ea' : '9908-17-0408' , #30 
+            'LENS, PL/CX, 25.4mmDIA, 50mmFL' : '8050-00-9028' , #31
+            'ASSY, SEED FOCUS LENS, PICOWAY' : '7122-00-9818' , #32
+            'ASSY, QW Base' : '7123-00-0205' , #33
+            'ASSY, HEAD DET, POLAR INSENSIT' : '7123-00-0127' , #34
+            'HD BEAMSPLITTER, NOPOL, WEDGED' : '8055-00-0322' , #35
+            'CABLE, LASER RECEPTACLE TO LASER HARNESS PICOWAY' : '6032-00-0411' , #36
+            'CABLE, HP PLUG TO LASER PLUG,  PICOWAY' : '6032-00-0410' , #37
+            'ASSY, BEAMSPLITTER, T755, R1064, FIXED,  PICOWAY' : '7122-00-9804' , #38  
+            'ABC' : '1234-56-7890' , #39
+            'ASSY, AMP PUMP FOCUSING LENS' : '7123-00-0012' , #40
+            'LENS, PL/CX, 25.4DIA, 75FL, AR' :'8050-00-9042' , #41
+            'ASSY, BEAMSPLITTER, T755, R1064, ADJUSTABLE PICOWAY' :	'7122-00-9803' , #42
+            'BEAMSPLITTER R1064 T755 PICOWAY' : '8055-00-0325' , #43
+            'Assy, X-Y Pump Fiber Lens' : '7123-00-0004' , #44
+            'LENS, PL/CX, 25.4DIA, 25.4FL' : '8050-00-9041', #45
+            'ASSY, PP MIRROR FLIPPER, PICOWAY' : '7123-00-0254', #46
+            'ASSY,THYR':'7122-00-3803', #47
+            'HV Dump Assy' : '7111-07-2807', #48
+            'HV Split Cap PCB' : '7111-07-2799', #49
+            'Flowswitch' : '7122-00-9592', #50
+            'DI Water Pump' :'3414-00-0248', #51
+            'DI Level Switch Assy' : '7122-00-9262', #52
+            'QC connecto' : '3412-14-0607', #53
+            'DI Reservior' : '7122-00-9238', #54
+            'KTP Assy' : '7122-00-9809', #55
+            '785 HP' : '7123-00-0191', #56
+            'Foot switch' : '5103-00-0030' #57
+            }
+        
+
+        afault=list() #빈 리스트 생성
+        if '3.1' in Fault: #3.1이 있으면 그에 맞는 파트를 리스트에 추가 하기
+            afault.append(0)
+            afault.append(18)
+
+        if '3.2' in Fault:
+            afault.append(46)
+            #listsyscondtionMsg.append(syscondtionMsg[5][0])
+            listengineeraction.append("532 Flipper mirror stuck\n->Need to replace 532 Flipper mirror\n") 
+
+        if '4.2' in Fault:
+            afault.append(1)
+            afault.append(18)
+
+        if '5.1' in Fault:
+            afault.append(1)
+            afault.append(18)
+
+        if '5.2' in Fault:
+            afault.append(1)
+            afault.append(18)
+            afault.append(47)
+
+        if '5.3' in Fault:
+            afault.append(1)
+            afault.append(18)
+            afault.append(48)
+            afault.append(49)
+
+        if '6.1' in Fault:
+            afault.append(18)
+            afault.append(35)
+            afault.append(27)
+            afault.append(29)
+            listengineeraction.append("STd Dev of Seed or 1064 or 532 would be high.\n->May need to align Cr4 lens or KTP\n") 
+
+        if '7.1' in Fault:
+            afault.append(18)
+
+        if '7.2' in Fault:
+            afault.append(18)
+
+        if '7.3' in Fault:
+            afault.append(50)
+            afault.append(51)
+
+        if '7.4' in Fault:
+            afault.append(50)
+            afault.append(51)
+
+        if '7.5' in Fault:
+            afault.append(52)
+            afault.append(53)
+            afault.append(54)
+
+        if '9.1' in Fault:
+            afault.append(18)
+
+        if '9.3' in Fault:
+            afault.append(55)
+            afault.append(18)
+
+        if '10.2' in Fault:
+            afault.append(36)
+            afault.append(37)
+
+        if '10.3' in Fault:
+            afault.append(56)
+
+        if '12.1' in Fault:
+            afault.append(35)
+            afault.append(30)
+            afault.append(29)
+            afault.append(27)
+
+        if '12.2' in Fault:
+            afault.append(35)
+            afault.append(30)
+            afault.append(29)
+            afault.append(27)
+
+        if '12.4' in Fault:
+            afault.append(35)
+            afault.append(30)
+
+
+        if '13.2' in Fault: 
+            afault.append(18)
+            afault.append(57)
+
+        if '13.4' in Fault: 
+            afault.append(18)
+            afault.append(57)
+
+        if '14.1' in Fault:
+            afault.append(1)
+            afault.append(30)
+
+        if '18.1' in Fault:
+            afault.append(18)
+            
+        if '19.1' in Fault:
+            afault.append(1)
+            afault.append(18)
+
+        if '19.3' in Fault:
+            afault.append(1)
+            afault.append(18)
+
+        if '19.4' in Fault:
+            afault.append(1)
+            afault.append(18)
+
+        if '19.5' in Fault:
+            afault.append(18)
+            afault.append(47)
+            afault.append(48)
+
+        if '21' in Fault:
+            afault.append(18)
+
+        if '23' in Fault:
+            afault.append(18)
+
+        if '26.1' in Fault:
+            afault.append(18)
+        
+        if '26.2' in Fault:
+            afault.append(18)
+
+        if '26.3' in Fault:
+            afault.append(18)
+
+        if '26.4' in Fault:
+            afault.append(18)
+        
+        if '27.1' in Fault:
+            afault.append(18)
+        
+        if '27.2' in Fault:
+            afault.append(18)
+
+        if '28.1' in Fault:
+            afault.append(18)
+            afault.append(55)
+        
+        if '28.4' in Fault:
+            afault.append(18)
+            afault.append(55)
+
+        if '29.1' in Fault:
+            afault.append(35)
+            afault.append(30)
+            afault.append(29)
+            afault.append(27)
+
+        if '29.2' in Fault:
+            afault.append(35)
+            afault.append(30)
+            afault.append(29)
+            afault.append(27)
+
+        if '30' in Fault:
+            afault.append(1)
+            afault.append(18)
+
+        
+        bfault = set(afault)
+        afault = list(bfault)
+
+        
+      
+        for b in afault: #for문을 돌리면서 문자를 리스트에 넣어 주면 되는데..
+            PartinfoPrint = 'Part Name : %s, Part Number : %s\n' %(list(Partinfo.keys())[b], Partinfo.get(list(Partinfo.keys())[b]))
+            listpartinfoprint.append(PartinfoPrint) 
+            #ServiceEngineerAction = 'May need to Replace %s, %s\n' %list(Partinfo.keys())[b], Partinfo.get(list(Partinfo.keys())[b]))
+            ServiceEngineerAction = 'May need to Replace %s per Candela procedure\n' %list(Partinfo.keys())[b]
+            listengineeraction.append(ServiceEngineerAction) 
+            
+        #document.getElementById('necessarypart').textContent = listpartinfoprint
+        document.getElementById('syscondition').textContent = ''.join(s for s in listsyscondtionMsg)
+        document.getElementById('necessarypart').textContent = ''.join(s for s in listpartinfoprint)
+        document.getElementById('serviceengineeraction').textContent = ''.join(s for s in listengineeraction)
+
+    document["test-button"].bind("click", alert)
+
+    
+
+    
+
+</script>
+
+
+</body>
+  
+</html>

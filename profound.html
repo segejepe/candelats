@@ -1,0 +1,109 @@
+﻿<!DOCTYPE html>
+<html>
+  
+<head>
+    <meta charset="UTF-8">
+    <title>Profound</title>
+    <script type="text/javascript" src="Profound_pfmi.js"></script>
+    <script type="text/javascript" src="Profound_possibleCasue.js"></script>
+    <script type="text/javascript" src="Profound_resolution.js"></script>
+
+    <link rel="stylesheet" href="menu.css">
+    <style>
+    h1{text-align: center;}
+    </style>
+
+
+
+</head>
+  
+
+
+
+<body topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0" style="background-color:black" >
+    <img src="logo_white_0.png" alt="Candela Logo in white" title="Candela Logo in white" class="d-inline-block align-top" style="background-color: black;">
+    
+  <div class="menu" >
+      <nav class="clearfix">
+        <ul class="clearfix">
+          <li><a href="index.html">Main</a></li>
+          <li><a href="picoway.html">Picoway</a></li> <!--""<-여기 부분에 URL 작성하면 됨-->
+          <li><a href="velashape.html">VelashapeIII</a></li>
+          <li><a href="profound.html">Profound</a></li>
+          <li><a href="co2re.html">Co2Re</a></li>
+          <li><a href="elosplus.html">eLosPlus</a></li>
+      </ul>
+      <a id="pull" href="#"></a>
+      
+    </nav>
+    </div>
+    
+
+<br>
+<br>
+<br>
+
+
+    <h1 style="color:white;">Profound troubleshooting</h1>
+    <br>
+   
+    <br>
+    <form name = "form" >
+
+    <table border="1" width="1000" align="center" cellspacing="0" cellpadding="3" 
+    bordercolor="#6600ff" bordercolordark="#ffffff" bordercolorlight="#fddc78">
+
+   
+
+    <tr>
+    <td align="left" width="400" bgcolor="#AED6F1">
+    <font color="#0000ff">*</font> Main Issue :</td>
+    <td widht="600" bgcolor="white">
+    <select name="selectpart" onchange="mainfaultpart(this.form); possible_cause(this.form); resolu(this.form) " >
+    <option selected value=0>-Please choose-
+    <option value=1>Needle Deployment Error
+    <option value=2>T Check Error
+    <option value=3>R Check Error
+    <option value=4>Cold Junction Error
+    <option value=5>Cold Juntion - High Range
+    <option value=6>Cold Junction Out of Range Low
+    <option value=7>Position Swtich Failure
+    <option value=8>Optical Switch Failure
+    <option value=9>Motor Jammed / Cartridge Misaligned
+    <option value=10>Set Date and Time
+    <option value=11>Touch Screen is Not Responding
+    <option value=12>Error #43 Power Supply is Out of Specification
+  
+    
+    </select>
+    </td>
+    </tr>
+
+    <tr>
+    <td align="left" width="400" bgcolor="#AED6F1">
+    <font color="#0000ff">*</font> Possible Casue:</td>
+    <td width="600" bgcolor="white">
+    <textarea name="posc" type="textarea" cols = "80" rows="10"></textarea></td>
+    </tr>
+
+    <tr>
+    <td align="left" width="400" bgcolor="#AED6F1">
+    <font color="#0000ff">*</font> Resolution:</td>
+    <td width="600" bgcolor="white">
+    <textarea name="resol" type="textarea" cols = "80" rows="10"></textarea></td>
+    </tr>
+
+    <tr>
+    <td align="left" width="400" bgcolor="#AED6F1">
+    <font color="#0000ff">*</font> Parts for main fault:</td>
+    <td width="600" bgcolor="white">
+    <textarea name="part" type="textarea" cols = "80" rows="10"></textarea></td>
+    </tr>
+
+    
+</table>
+</form>
+
+</body>
+  
+</html>

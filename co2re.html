@@ -1,0 +1,117 @@
+﻿<!DOCTYPE html>
+<html>
+  
+<head>
+    <meta charset="UTF-8">
+    <title>CO2RE</title>
+    <script type="text/javascript" src="CO2RE_pfmi.js"></script>
+    <script type="text/javascript" src="CO2RE_possibleCasue.js"></script>
+    <script type="text/javascript" src="CO2RE_resolution.js"></script>
+
+    <link rel="stylesheet" href="menu.css">
+    <style>
+    h1{text-align: center;}
+    </style>
+
+
+
+</head>
+  
+<body topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0" style="background-color:black" >
+    <img src="logo_white_0.png" alt="Candela Logo in white" title="Candela Logo in white" class="d-inline-block align-top" style="background-color: black;">
+
+
+    <div class="menu" >
+      <nav class="clearfix">
+        <ul class="clearfix">
+          <li><a href="index.html">Main</a></li>
+          <li><a href="picoway.html">Picoway</a></li> <!--""<-여기 부분에 URL 작성하면 됨-->
+          <li><a href="velashape.html">VelashapeIII</a></li>
+          <li><a href="profound.html">Profound</a></li>
+          <li><a href="co2re.html">Co2Re</a></li>
+          <li><a href="elosplus.html">eLosPlus</a></li>
+      </ul>
+      <a id="pull" href="#"></a>
+      
+    </nav>
+    </div>
+    
+
+<br>
+<br>
+<br>
+    
+    <h1 style="color:white;">CO2RE troubleshooting</h1>
+    <br>
+   
+    <br>
+    <form name = "form" >
+
+    <table border="1" width="1000" align="center" cellspacing="0" cellpadding="3" 
+    bordercolor="#6600ff" bordercolordark="#ffffff" bordercolorlight="#fddc78">
+
+   
+
+    <tr>
+    <td align="left" width="400" bgcolor="#AED6F1">
+    <font color="#0000ff">*</font> Main Issue :</td>
+    <td widht="600" bgcolor="white">
+    <select name="selectpart" onchange="mainfaultpart(this.form); possible_cause(this.form); resolu(this.form) " >
+    <option selected value=0>-Please choose-
+    <option value=1>System Not Powering On
+    <option value=2>System is Emitting One Line Instead of Full Pattern
+    <option value=3>System is Emitting No Aiming Beam/CO2 Pattern With No Error Messages
+    <option value=4>Touchscreen Not Responding Or is Off Calibration
+    <option value=5>System Beeping Red Light Instead of Turning On
+    <option value=6>Screen is Freezing During Use
+    <option value=7>Aiming Beam is not on
+    <option value=8>Error 1: Gem 40 Voltage Error
+    <option value=9>Error 2: Gem 40 Over Temperature
+    <option value=10>Error 3: Laser VSWR Error
+    <option value=11>Error 4 and 5: Emergency Stop Button Reset
+    <option value=12>Error 6 or Error 19: Foot Switch not connected
+    <option value=13>Error 7: External Remote Interlock Activated
+    <option value=14>Error 8: Key lock not turned on
+    <option value=15>Error 20: Foot Switch stuck on
+    <option value=16>Error 29 and 30: Shutter Did not open properly
+    <option value=17>Error 31: Jumping Lens did not go in properly
+    <option value=18>Error 32: Jumping Lens did not go out properly
+    <option value=19>Error 42: CW Laser Power Too Low 
+    <option value=20>Error 43: CW Laser Power Too High
+    <option value=21>Error 44: Pulsed Laser Power Too Low
+    <option value=22>Error 45: Pulsed Laser Power Too High  
+    <option value=23>Error 46: Laser Power Meter out of Calibration 
+    <option value=24>Error 50: Laser VSWR Error at startup  
+
+    </select>
+    </td>
+    </tr>
+
+    <tr>
+    <td align="left" width="400" bgcolor="#AED6F1">
+    <font color="#0000ff">*</font> Possible Casue:</td>
+    <td width="600" bgcolor="white">
+    <textarea name="posc" type="textarea" cols = "80" rows="10"></textarea></td>
+    </tr>
+
+    <tr>
+    <td align="left" width="400" bgcolor="#AED6F1">
+    <font color="#0000ff">*</font> Resolution:</td>
+    <td width="600" bgcolor="white">
+    <textarea name="resol" type="textarea" cols = "80" rows="10"></textarea></td>
+    </tr>
+
+    <tr>
+    <td align="left" width="400" bgcolor="#AED6F1">
+    <font color="#0000ff">*</font> Parts for main fault:</td>
+    <td width="600" bgcolor="white">
+    <textarea name="part" type="textarea" cols = "80" rows="10"></textarea></td>
+    </tr>
+
+    
+</table>
+</form>
+
+</body>
+  
+</html>

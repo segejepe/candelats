@@ -1,0 +1,136 @@
+﻿<!DOCTYPE html>
+<html>
+  
+<head>
+    <meta charset="UTF-8">
+    <title>eLos Plus</title>
+    <script type="text/javascript" src="elosplus_pfmi.js"></script>
+    <script type="text/javascript" src="elosplus_possibleCasue.js"></script>
+    <script type="text/javascript" src="elosplus_resolution.js"></script>
+
+    <link rel="stylesheet" href="menu.css">
+    <style>
+    h1{text-align: center;}
+    </style>
+
+
+
+</head>
+  
+<body topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0" style="background-color:black" >
+    <img src="logo_white_0.png" alt="Candela Logo in white" title="Candela Logo in white" class="d-inline-block align-top" style="background-color: black;">
+
+
+    <div class="menu" >
+      <nav class="clearfix">
+        <ul class="clearfix">
+          <li><a href="index.html">Main</a></li>
+          <li><a href="picoway.html">Picoway</a></li> <!--""<-여기 부분에 URL 작성하면 됨-->
+          <li><a href="velashape.html">VelashapeIII</a></li>
+          <li><a href="profound.html">Profound</a></li>
+          <li><a href="co2re.html">Co2Re</a></li>
+          <li><a href="elosplus.html">eLosPlus</a></li>
+      </ul>
+      <a id="pull" href="#"></a>
+      
+    </nav>
+    </div>
+    
+
+<br>
+<br>
+<br>
+    
+    <h1 style="color:white;">eLos Plus troubleshooting</h1>
+    <br>
+   
+    <br>
+    <form name = "form" >
+
+    <table border="1" width="1000" align="center" cellspacing="0" cellpadding="3" 
+    bordercolor="#6600ff" bordercolordark="#ffffff" bordercolorlight="#fddc78">
+
+   
+
+    <tr>
+    <td align="left" width="400" bgcolor="#AED6F1">
+    <font color="#0000ff">*</font> Main Issue :</td>
+    <td widht="600" bgcolor="white">
+    <select name="selectpart" onchange="mainfaultpart(this.form); possible_cause(this.form); resolu(this.form) " >
+    <option selected value=0>-Please choose-
+    <option value=1>System Will Not Power On
+    <option value=2>System Display Will Not Turn On/Touchscreen 
+    <option value=3>No Buzzer Sound
+    <option value=4>ID 1: Internal State Conflict Software Malfunction
+    <option value=5>ID 2: Bad Coupling-No RF Contact
+    <option value=6>ID 3: IPL Switch Card Error
+    <option value=7>ID 4: Charger Card Malfunction
+    <option value=8>ID 6: IPL Ignition (Simmer) Error
+    <option value=9>ID 7: Upper Fan Malfunction
+    <option value=10>ID 8: Middle Fan Malfunction
+    <option value=11>ID 9: Bottom Fan Malfunction
+    <option value=12>ID 10: TEC (temp fault) malfunction
+    <option value=13>ID 11: TEC (temp fault) malfunction
+    <option value=14>ID 12: Laser Driver Error
+    <option value=15>ID 13: Laser Status(Diode in the App) Error
+    <option value=16>ID 15: IPL Applicator Water Flow Error
+    <option value=17>ID 16: Laser applicator water flow error
+    <option value=18>ID 17: Interlock is disconnected
+    <option value=19>ID 18 Capacitor Switch Card Error
+    <option value=20>ID 20: Laser Driver Error
+    <option value=21>ID 22: Applicator Temperature out of range (Thermal Switch Temp)
+    <option value=22>ID 23: IPL Ignition Card Malfunction
+    <option value=23>ID 24: Applicator sensor low temperature
+    <option value=24>ID 25: Ambient over temperature fault
+    <option value=25>ID 29: ISM value out of permitted range Pulse was terminated
+    <option value=26>ID 31: Laser/IPL/SubRF Applicator connection fault
+    <option value=27>ID 32: Capacitor Bank Voltage Error
+    <option value=28>ID 33: Tip is disconnected
+    <option value=29>ID 36: RF Calibration Table is corrupted or does not exist-recalibrate
+    <option value=30>ID 37: SRF Calibration Table is corrupted or does not exist-recalibrate
+    <option value=31>ID 38: Internal Communication Error GUI
+    <option value=32>ID 39: Clean Tip
+    <option value=33>ID 40: Preventive Maintenance Required to Applicator
+    <option value=34>ID 41: Water Purity Readings out of Range
+    <option value=35>ID 42: Low RF Measured Energy
+    <option value=36>ID 44: Wrong Version of SRF Calibration Table
+    <option value=37>ID 45: Applicator Sensor Over Temperature
+    <option value=38>ID 46: Foot Switch Disconnected 
+    <option value=39>ID 47: Foot Switch Failure
+
+
+
+
+
+    </select>
+    </td>
+    </tr>
+
+    <tr>
+    <td align="left" width="400" bgcolor="#AED6F1">
+    <font color="#0000ff">*</font> Possible Casue:</td>
+    <td width="600" bgcolor="white">
+    <textarea name="posc" type="textarea" cols = "80" rows="10"></textarea></td>
+    </tr>
+
+    <tr>
+    <td align="left" width="400" bgcolor="#AED6F1">
+    <font color="#0000ff">*</font> Resolution:</td>
+    <td width="600" bgcolor="white">
+    <textarea name="resol" type="textarea" cols = "80" rows="10"></textarea></td>
+    </tr>
+
+    <tr>
+    <td align="left" width="400" bgcolor="#AED6F1">
+    <font color="#0000ff">*</font> Parts for main fault:</td>
+    <td width="600" bgcolor="white">
+    <textarea name="part" type="textarea" cols = "80" rows="10"></textarea></td>
+    </tr>
+
+    
+</table>
+</form>
+
+</body>
+  
+</html>
