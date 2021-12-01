@@ -293,16 +293,18 @@
                 elif pulsehistoyresult[m][29] == refCnt: #켈리브레이션 중에서도 마지막 켈리브레이션만 나오게 refCnt가 0이 되면 LVM을 그만 받아라.
                     break
         
-        hvRef_int = [int(i) for i in hvRef]
+        hvRef_int = [int(i) for i in hvRef] #hvRef_int이 HVRef의 모든값을 리스트로 받음
+        hvRef_max = max(hvRef_int)
         hd1064_float = [float(i) for i in hd1064]
         hd532_float = [float(i) for i in hd532]
+        hd532_max = max(hd532_float)
         ase_int = [int(i) for i in ase]
 
         syscondtionMsg = [
         ["The HVRef value is stable after set at 7J.\n","Even though the Amp value is MAX:90, the 1064 energy on 8B(H) is low, so the HVRef value is constantly increasing.\n"],
-        ["The final HVRef value is set below 1225\n" ,"The final HVRef value is set over 1225\n"] ,
+        ["The final HVRef value is set below 1225, HVRef is {}\n".format(hvRef_max) ,"The final HVRef value is set over 1225\n"] ,
         ["1064 Energy on 8B(H) is lower than 570mJ\n" , "1064 Energy on 8B(H) is around 570mJ\n"] ,
-        ["532 energy is low\n", "532 energy is good\n"],
+        ["532 energy is low, 532 energy on HD is {}mJ\n".format(hd532_max), "532 energy is good, 532 energy on HD is {}mJ\n".format(hd532_max)],
         ["ASE is detected during calibration, please check alignment\n", "No ASE detected during calibration: Good\n"],
         ["532 Flipper mirror stuck\n", "n/a"]]
         
@@ -316,7 +318,7 @@
         for i in hvRef_int:
             try: count[i] += 1
             except: count[i]=1
-        
+         
         hvRef_intlist = list(count.items()) 
         if hvRef_intlist[1][1] / hvRef_intlist[4][1] < 2:
             listsyscondtionMsg.append(syscondtionMsg[0][0]) 
@@ -327,7 +329,7 @@
         
         def hvRefAletflashlamp(x):
             return x>1200
-        hvRefAletflashlamplist = list(filter(hvRefAletflashlamp,(hvRef_int))) 
+        hvRefAletflashlamplist = list(filter(hvRefAletflashlamp,(hvRef_int))) #이것 hvRef_int이 HVRef의 모든값을 리스트로 받는데, 이것을 필터한것이다.
         if not hvRefAletflashlamplist:
             listsyscondtionMsg.append(syscondtionMsg[1][0])
         if hvRefAletflashlamplist:
