@@ -295,18 +295,90 @@
         
         hvRef_int = [int(i) for i in hvRef] #hvRef_int이 HVRef의 모든값을 리스트로 받음
         hvRef_max = max(hvRef_int)
-        hd1064_float = [float(i) for i in hd1064]
+        hd1064_float = [float(i) for i in hd1064] #cal의 Head 1064 의 모든 값을 리스트로 받음.
+
+        for i in  hd1064_float:
+            if i >= 530:
+              hd1064higherthan530 = i #켈리브레이션에서 1064 530mJ이상 되는 처음 값을 찾음. 이제 이 값 이전의 값을 짜르면 되는데.
+        #슬라이싱 하기 위해서, d1064higherthan530 가 hd1064_float리스트에 몇번째 자리에 있는지를 찾자.
+        positionhiherthan530 = hd1064_float.index(hd1064higherthan530) +1
+        #이제 이 자리 이전의 값을 슬라이싱 하자. 그러면, 켈리브레이션에서 530에서 set 되는 이하의 값은 짤려 나간다. 
+        listonlyhigherthan530 = hd1064_float[:positionhiherthan530]
+        
+        #리스트를 큰 숫자부터 나오게 뒤집기
+        listonlyhigherthan530.reverse()
+        
+        #여기서 보니 또, 30mJ 보다 작은 것들이 또 눈에 거슬리네.. 이것도 자르자.
+        for i in listonlyhigherthan530:
+            if i > 30: 
+                listonlyhigherthan530cut30 = i #처음 30보다 큰 값
+        #처음 30보다 큰위치의 자리 봔환
+        positonlistonlyhigherthan530cut30 = listonlyhigherthan530.index(listonlyhigherthan530cut30) +1
+        #이제 자리를 찾았으니, 그값 이후 부터 짜르자.
+        newlistbetween30and530 = listonlyhigherthan530[:positonlistonlyhigherthan530cut30] #1064HD drop energy 리스트, 처음 530보다 큰값에서 에너지가 작아지면서 30보다 큰값.
+        #이제 이 값을 3개씩 묶어 평균 값을 내어, 값이 어떻게 떨어 지는지 , 떨어지는 값을 프린트 해주면 된다. 
+        
+        #1064HD drop energy를 3개씩 묶기
+        Threelistnewlistbetween30and530 = [newlistbetween30and530[i * 3:(i + 1) * 3] for i in range((len(newlistbetween30and530) + 3 - 1) // 3 )] 
+        
+        #1064HD 에너지 drop 이 어떤 값으로 떨어지는 지 나타내는 변수,  처음 앞에값에서 그다음 앞에값 빼기, 그리고 그다음 앞에값빼기.
+        #나중에 for 문으로 고치자.
+        
+        First1064drop = int(Threelistnewlistbetween30and530[0][0] - Threelistnewlistbetween30and530[1][0]) #실수형을 정수 형으로 변환
+        Second1064drop = int(Threelistnewlistbetween30and530[1][0] - Threelistnewlistbetween30and530[2][0])
+        Third1064drop = int(Threelistnewlistbetween30and530[2][0] - Threelistnewlistbetween30and530[3][0])
+        Fourth1064drop = int(Threelistnewlistbetween30and530[3][0] - Threelistnewlistbetween30and530[4][0])
+        Fifth1064drop = int(Threelistnewlistbetween30and530[4][0] - Threelistnewlistbetween30and530[5][0])
+        
+        
+        hd1064_max = max(hd1064_float) 
         hd532_float = [float(i) for i in hd532]
         hd532_max = max(hd532_float)
+        
         ase_int = [int(i) for i in ase]
 
+        #Std dev 구하는 함수
+        def variance(data):
+            # Number of observations
+            n = len(data)
+            # Mean of the data
+            mean = sum(data) / n
+            # Square deviations
+            deviations = [(x - mean) ** 2 for x in data]
+            # Variance
+            variance = ( sum(deviations) / (n-1) )**(1/2)
+            return variance
+
+        #1064 캘리브레이션에서 1064가 max를 찍은 후, 그 AMP 값에 3번 한 것을 뽑아 내는것.
+        firstThree1064energy = Threelistnewlistbetween30and530[0]
+        stndev=variance(firstThree1064energy)
+        
+        #이제 532도 1064와 동일한 방법으로 해야 한다. 
+        
+        for i in hd532_float:
+            if i > 150:
+                first532energy = i 
+        
+        postionfirst532 = hd532_float.index(first532energy) +1
+        hd532listexcept1064cal = hd532_float[:postionfirst532]
+        hd532listexcept1064cal.reverse()
+        liststndev532 = [hd532listexcept1064cal[0], hd532listexcept1064cal[1], hd532listexcept1064cal[2]]
+        stndev532 = variance(liststndev532)
+        
+        
+        
         syscondtionMsg = [
         ["The HVRef value is stable after set at 7J.\n","Even though the Amp value is MAX:90, the 1064 energy on 8B(H) is low, so the HVRef value is constantly increasing.\n"],
         ["The final HVRef value is set below 1225, HVRef is {}\n".format(hvRef_max) ,"The final HVRef value is set over 1225\n"] ,
-        ["1064 Energy on 8B(H) is lower than 570mJ\n" , "1064 Energy on 8B(H) is around 570mJ\n"] ,
-        ["532 energy is low, 532 energy on HD is {}mJ\n".format(hd532_max), "532 energy is good, 532 energy on HD is {}mJ\n".format(hd532_max)],
+        ["The max energy of 1064 on HD is {}mJ.\n->1064 Energy on 8B(H) would be lower than 570mJ\n".format(hd1064_max) , "1064 Energy is good. The max energy of 1064 on HD is {}mJ\n".format(hd1064_max)],
+        ["532 energy is low, The max energy of 532 on HD is {}mJ\n".format(hd532_max), "532 energy is good, The max energy of 532 on HD is {}mJ\n".format(hd532_max)],
         ["ASE is detected during calibration, please check alignment\n", "No ASE detected during calibration: Good\n"],
-        ["532 Flipper mirror stuck\n", "n/a"]]
+        ["532 Flipper mirror stuck\n", "n/a"],
+        ["1064 energy after set max {}mJ\n".format(newlistbetween30and530), "list를 3개씩 나눈것\n{}\n".format(Threelistnewlistbetween30and530)],
+        ["1064 Std Dev is {}% \n".format("%2.2f"%stndev), "n/a"], #%.2f를 사용하면 소수점 이하 둘째 자리까지 나타낼 수 있습니다.
+        ["Once the laser energy reaches the 530mJ, 1064 Energy is dropped by {}mJ, {}mJ, {}mJ, {}mJ, {}mJ\n".format(First1064drop, Second1064drop, Third1064drop, Fourth1064drop,Fifth1064drop) , "n/a"],
+        ["532 Std Dev is {}% \n".format("%2.2f"%stndev532,), "532 is dropped by {}mJ\n".format(liststndev532)] #%.2f를 사용하면 소수점 이하 둘째 자리까지 나타낼 수 있습니다.
+        ]
         
 
         listsyscondtionMsg=[]
@@ -358,9 +430,17 @@
         aseAletlist = list(filter(aseAlet,(ase_int )))
         if not aseAletlist:
             listsyscondtionMsg.append(syscondtionMsg[4][1]) 
+            listsyscondtionMsg.append(syscondtionMsg[7][0])
+            listsyscondtionMsg.append(syscondtionMsg[8][0])
+            listsyscondtionMsg.append(syscondtionMsg[9][0])
+            #listsyscondtionMsg.append(syscondtionMsg[9][1])
         if aseAletlist:
             listsyscondtionMsg.append(syscondtionMsg[4][0])
-            listengineeraction.append("The energy at 8B(H) might be incorrect due to the fact of ASE\n->Please check ASE\n") 
+            listengineeraction.append("The energy at 8B(H) might be incorrect due to the fact of ASE\n->Please check ASE\n")   
+            listsyscondtionMsg.append(syscondtionMsg[7][0])
+            listsyscondtionMsg.append(syscondtionMsg[8][0])
+            listsyscondtionMsg.append(syscondtionMsg[9][0])
+            #listsyscondtionMsg.append(syscondtionMsg[9][1])
         #System condition from last calibration에 출력
 
         
